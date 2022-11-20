@@ -1,0 +1,28 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+resources:
+  repositories:
+  - repository: robottemplate
+    type: git
+    name: ISD Platforms/azure-platformone-testing-poc
+    ref: main
+
+jobs:
+  - job: 
+    displayName: Run Robot Infrastructure Tests
+    timeoutInMinutes: 120
+    steps:
+    - checkout: self
+    - checkout: robottemplate
+    - bash: mv $(Build.Repository.LocalPath)/azure-platformone-testing-poc/* $(Build.Repository.LocalPath)
+    - bash: mv $(Build.Repository.LocalPath)/azure-platformone-testing-poc-app-repo/* $(Build.Repository.LocalPath)
+    - template: pipeline.yml@robottemplate
